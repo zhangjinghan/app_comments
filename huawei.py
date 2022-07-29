@@ -60,4 +60,4 @@ for page in range(1, 10):
 import pandas as pd
 
 df = pd.DataFrame(data_all, columns=['昵称', '评论内容', '评论时间', '手机型号', '评分'])
-df.to_csv('D:/edge.csv', encoding="utf_8_sig")
+df.to_csv('./edge.csv', encoding="utf_8_sig")
