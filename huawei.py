@@ -1,5 +1,6 @@
 from pyparsing import col
 import requests
+import pandas as pd
 
 # 请求头部 计算机网络知识
 headers = {
@@ -57,7 +58,7 @@ for page in range(1, 10):
         rating = i['rating']  # 评分
         print([nickname, comment, operTime, phone, rating])
         data_all.append([nickname, comment, operTime, phone, rating])
-import pandas as pd
+
 
 df = pd.DataFrame(data_all, columns=['昵称', '评论内容', '评论时间', '手机型号', '评分'])
-df.to_csv('D:/edge.csv', encoding="utf_8_sig")
+df.to_csv('./edge.csv', encoding="utf_8_sig")
