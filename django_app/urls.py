@@ -1,4 +1,5 @@
-"""comments URL Configuration
+
+"""django_app URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -15,10 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url
 from . import views
 
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('comments/', views.comments)
+     path('disp/',  views.getcomments),
+     path('admin/', admin.site.urls),
 ]
