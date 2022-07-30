@@ -30,14 +30,6 @@ data_all = []
 # outlook C100502955
 
 # 连接数据库
-db = pymysql.connect(
-
-host="127.0.0.1", 
-port=3306,
-user='root',    #在这里输入用户名
-password='root',     #在这里输入密码
-database='comments',
-)
 
 mysql_setting = {
         'host': '127.0.0.1',  # 数据库地址，本机 ip 地址 127.0.0.1
@@ -47,9 +39,6 @@ mysql_setting = {
         'db':'comments',
         'charset': 'utf8'
 }
-
-
-cursor = db.cursor() #创建游标对象
 
 for page in range(1, 10):
 
@@ -74,7 +63,6 @@ for page in range(1, 10):
     # 提取存储评论内容的列表
     data = con['list']
 
-
     for i in data:
         print(i)
         nickname = i['accountName']  # 昵称
@@ -82,7 +70,6 @@ for page in range(1, 10):
         operTime = i['operTime']  # 评价时间
         phone = i['phone']  # 手机型号
         rating = i['rating']  # 评分
-
 
         sql = 'insert into database_huaweicomments(nickname, comment, operTime, phone, rating) values(%s,%s,%s,%s,%s);'
 
