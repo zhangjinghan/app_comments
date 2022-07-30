@@ -8,6 +8,12 @@ class CommentsList(models.Model): # 类名代表数据库表名
     score = models.CharField(max_length=255,default="0")
     version = models.CharField(max_length=255,default=" ")
     name = models.CharField(max_length=255,default="outlook")  # app名字
-    msgid = models.CharField(max_length=255,default="nan")  # 主键
+    msgid = models.CharField(max_length=255,default="nan")  
 
+class huaweiComments(models.Model): # 类名代表数据库表名
+    nickname = models.CharField(max_length=255,default="anoy") 
+    comment = models.CharField(max_length=255,default=" ")
+    operTime = models.CharField(max_length=255,default="000000")
+    phone = models.CharField(max_length=255,default=" ")
+    rating = models.CharField(max_length=255,default="0")
     

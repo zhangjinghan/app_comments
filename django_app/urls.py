@@ -20,6 +20,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-     path('disp/',  views.getcomments),
+     path('360/',  views.get_360),
+     path('huawei/',  views.get_huawei),
      path('admin/', admin.site.urls),
 ]

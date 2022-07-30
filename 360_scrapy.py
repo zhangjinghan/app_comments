@@ -17,7 +17,7 @@ headers = {
 tl = Timeloop()
 @tl.job(interval=timedelta(seconds=600))
 def sample_job_every_600s():
-            # 连接数据库
+    # 连接数据库
     db = pymysql.connect(
     
     host="127.0.0.1", 
@@ -41,28 +41,29 @@ def sample_job_every_600s():
         json_str = json.loads(res.text) # 加载评论内容
         # print ("JSON 对象：", json_str)
 
-
-
         Comments = []
 
         for item in json_str:
-            sql = 'insert into database_commentslist(date,user,content,score,version,name) values(%s,%s,%s,%s,%s,%s);'
+            querysql = "select msgid from database_commentslist where msgid="+pymysql.converters.escape_string(str(item.get('msgid')))
+            if(cursor.execute(querysql)==0):
+            # print(querysql)
+                sql = 'insert into database_commentslist(date,user,content,score,version,name, msgid) values(%s,%s,%s,%s,%s,%s,%s);'
 
-            # print('------------------------')
-            # print(item.get('score'))
-            # print(item.get('version_name'))
+                # print('------------------------')
+                # print(item.get('score'))
+                # print(item.get('version_name'))
 
-            date = pymysql.converters.escape_string(item.get('create_time'))
-            user = pymysql.converters.escape_string(item.get('username'))
-            content = pymysql.converters.escape_string(item.get('content'))
-            score = pymysql.converters.escape_string(str(item.get('score')))
-            version = pymysql.converters.escape_string(str(item.get('version_name')))
-            msgid = pymysql.converters.escape_string(str(item.get('msgid')))
-            name = 'outlook'
+                date = pymysql.converters.escape_string(item.get('create_time'))
+                user = pymysql.converters.escape_string(item.get('username'))
+                content = pymysql.converters.escape_string(item.get('content'))
+                score = pymysql.converters.escape_string(str(item.get('score')))
+                version = pymysql.converters.escape_string(str(item.get('version_name')))
+                msgid = pymysql.converters.escape_string(str(item.get('msgid')))
+                name = 'outlook'
 
-            data = [date,user,content,score,version,name,msgid]
-            # cursor.executemany(sql, data)
-            cursor.execute(sql,data)     #执行sql语句，创建表
+                data = [date,user,content,score,version,name,msgid]
+                # cursor.executemany(sql, data)
+                cursor.execute(sql,data)     # 插入数据
             # print("sql",sql)
             # cds=cursor.fetchall()
             # print(res)
