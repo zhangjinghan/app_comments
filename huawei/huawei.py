@@ -61,30 +61,27 @@ for page in range(1, 10):
     # 将传递的数据转换为 json 文件，可以提取具体的评论内容
     con = json.loads(response.text)
     # 提取存储评论内容的列表
-    data = con['list']
+    if 'list' in con:
+        data = con.get('list')
 
-    for i in data:
-        print(i)
-        nickname = i['accountName']  # 昵称
-        comment = i['commentInfo']  # 评价内容
-        operTime = i['operTime']  # 评价时间
-        phone = i['phone']  # 手机型号
-        rating = i['rating']  # 评分
+        for i in data:
+            print(i)
+            nickname = i['accountName']  # 昵称
+            comment = i['commentInfo']  # 评价内容
+            operTime = i['operTime']  # 评价时间
+            phone = i['phone']  # 手机型号
+            rating = i['rating']  # 评分
 
-        sql = 'insert into database_huaweicomments(nickname, comment, operTime, phone, rating) values(%s,%s,%s,%s,%s);'
+            sql = 'insert into database_huaweicomments(nickname, comment, operTime, phone, rating) values(%s,%s,%s,%s,%s);'
 
-        nickname1 = pymysql.converters.escape_string(str(i.get('accountName')))
-        comment1 = pymysql.converters.escape_string(str(i.get('commentInfo')))
-        operTime1 = pymysql.converters.escape_string(str(i.get('operTime')))
-        phone1 = pymysql.converters.escape_string(str(i.get('phone')))
-        rating1 = pymysql.converters.escape_string(str(i.get('rating')))
+            nickname1 = pymysql.converters.escape_string(str(i.get('accountName')))
+            comment1 = pymysql.converters.escape_string(str(i.get('commentInfo')))
+            operTime1 = pymysql.converters.escape_string(str(i.get('operTime')))
+            phone1 = pymysql.converters.escape_string(str(i.get('phone')))
+            rating1 = pymysql.converters.escape_string(str(i.get('rating')))
 
-        huaweidata = [nickname1, comment1, operTime1, phone1, rating1]
-        # print(huaweidata)
-        # cursor.execute(sql,huaweidata)     #执行sql语句
-
-        # print([nickname, comment, operTime, phone, rating])
-        data_all.append(huaweidata)
+            huaweidata = [nickname1, comment1, operTime1, phone1, rating1]
+            data_all.append(huaweidata)
 
 df = pd.DataFrame(data_all, columns=['nickname', 'comment', 'operTime', 'phone', 'rating'])
 
@@ -95,6 +92,9 @@ df.to_csv('./edge.csv', encoding="utf_8")
 table_name = 'database_huaweicomments'
 path = './edge.csv'
 comments_data = pd.read_csv(path,encoding='utf-8')
+comments_data.columns = ['msgid','nickname', 'comment', 'operTime', 'phone', 'rating']
+print(comments_data.head)
+
 engine = create_engine("mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}".format(**mysql_setting), max_overflow=5)
 comments_data.to_sql(table_name,engine,index=true,if_exists='replace',)
 print('导入成功...')
