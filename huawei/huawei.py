@@ -30,6 +30,18 @@ data_all = []
 # outlook C100502955
 
 # 连接数据库
+db = pymysql.connect(
+
+host="127.0.0.1", 
+port=3306,
+user='root',    #在这里输入用户名
+password='root',     #在这里输入密码
+database='comments',
+charset='utf8'
+)
+
+cursor = db.cursor() #创建游标对象
+
 
 mysql_setting = {
         'host': '127.0.0.1',  # 数据库地址，本机 ip 地址 127.0.0.1
@@ -60,6 +72,8 @@ for page in range(1, 10):
 
     # 将传递的数据转换为 json 文件，可以提取具体的评论内容
     con = json.loads(response.text)
+    print(con)
+
     # 提取存储评论内容的列表
     if 'list' in con:
         data = con.get('list')
@@ -74,29 +88,36 @@ for page in range(1, 10):
 
             sql = 'insert into database_huaweicomments(nickname, comment, operTime, phone, rating) values(%s,%s,%s,%s,%s);'
 
+            # msgid = pymysql.converters.escape_string(str(i.get('commentId')))
             nickname1 = pymysql.converters.escape_string(str(i.get('accountName')))
             comment1 = pymysql.converters.escape_string(str(i.get('commentInfo')))
             operTime1 = pymysql.converters.escape_string(str(i.get('operTime')))
             phone1 = pymysql.converters.escape_string(str(i.get('phone')))
             rating1 = pymysql.converters.escape_string(str(i.get('rating')))
 
-            huaweidata = [nickname1, comment1, operTime1, phone1, rating1]
-            data_all.append(huaweidata)
+            # data = ['msgid','nickname', 'comment', 'operTime', 'phone', 'rating'] 
 
+            huaweidata = [nickname1, comment1, operTime1, phone1, rating1]
+            cursor.execute(sql,huaweidata)     # 插入数据
+            db.commit() # 提交请求
+
+            data_all.append(huaweidata)
+cursor.close() 
+db.close()  #关闭数据库连接
 df = pd.DataFrame(data_all, columns=['nickname', 'comment', 'operTime', 'phone', 'rating'])
 
-df.to_csv('./edge.csv', encoding="utf_8")
+# df.to_csv('./edge.csv', encoding="utf_8")
  
 # 表名
 # 如果不存在表，则自动创建
-table_name = 'database_huaweicomments'
-path = './edge.csv'
-comments_data = pd.read_csv(path,encoding='utf-8')
-comments_data.columns = ['msgid','nickname', 'comment', 'operTime', 'phone', 'rating']
-print(comments_data.head)
+# table_name = 'database_huaweicomments'
+# path = './edge.csv'
+# comments_data = pd.read_csv(path,encoding='utf-8')
+# comments_data.columns = ['msgid','nickname', 'comment', 'operTime', 'phone', 'rating']
+# print(comments_data.head)
 
-engine = create_engine("mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}".format(**mysql_setting), max_overflow=5)
-comments_data.to_sql(table_name,engine,index=true,if_exists='replace',)
-print('导入成功...')
+# engine = create_engine("mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}".format(**mysql_setting), max_overflow=5)
+# comments_data.to_sql(table_name,engine,index=true,if_exists='replace',)
+# print('导入成功...')
 
-print(comments_data.head(5))
+# print(comments_data.head(5))
