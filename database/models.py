@@ -17,4 +17,5 @@ class Comments_huawei(models.Model): # 类名代表数据库表名
     operTime = models.CharField(max_length=255,default="000000")
     phone = models.CharField(max_length=255,default=" ")
     rating = models.CharField(max_length=255,default="0")
+    appname = models.CharField(max_length=255,default="0")
     

@@ -1,9 +1,10 @@
+
 from pyparsing import col
 import requests
 import pandas as pd
 import pymysql
 from sqlalchemy import create_engine, true
-
+import json
 # 请求头部 计算机网络知识
 headers = {
     'Accept': 'application/json, text/plain, */*',
@@ -25,9 +26,14 @@ data_all = []
 # 通过在浏览器抓包 获取评论加载的动态链接 通过传递数据来修改数据请求页数
 # 修改 appid 可以抓取不同的 app 的内容
 #  注意也要修改下面的保存表格的名字
-# C100148961 edge
+# edge C100148961 
 # office C10888510
 # outlook C100502955
+appdict={
+    'C100148961':'edge',
+    'C10888510':'office',
+    'C100502955':'outlook',
+}
 
 # 连接数据库
 db = pymysql.connect(
@@ -37,74 +43,72 @@ port=3306,
 user='root',    #在这里输入用户名
 password='root',     #在这里输入密码
 database='comments',
-charset='utf8'
+charset='utf8mb4'
 )
 
 cursor = db.cursor() #创建游标对象
 
 
-mysql_setting = {
-        'host': '127.0.0.1',  # 数据库地址，本机 ip 地址 127.0.0.1
-        'port': 3306,  # 端口
-        'user': 'root',  # 数据库用户名
-        'passwd': 'root',  # 数据库密码
-        'db':'comments',
-        'charset': 'utf8'
-}
+# mysql_setting = {
+#         'host': '127.0.0.1',  # 数据库地址，本机 ip 地址 127.0.0.1
+#         'port': 3306,  # 端口
+#         'user': 'root',  # 数据库用户名
+#         'passwd': 'root',  # 数据库密码
+#         'db':'comments',
+#         # 'charset': 'utf8'
+# }
+for k,v in appdict.items():
+    for page in range(1, 10):
+        params = {
+            'method': 'internal.user.commenList3',
+            'serviceType': '20',
+            'reqPageNum': page,
+            'maxResults': '25',
+            'appid': k,
+            'version': '10.0.0',
+            'zone': '',
+            'locale': 'zh',
+        }
 
-for page in range(1, 10):
+        # 请求的链接 ，添加参数和请求头
+        #  使用的 requests 库的 get 方法
+        response = requests.get('https://web-drcn.hispace.dbankcloud.cn/uowap/index', params=params, headers=headers)
+        # 将传递的数据转换为 json 文件，可以提取具体的评论内容
+        con = json.loads(response.text)
+        # print(con)
+        # 提取存储评论内容的列表
+        if 'list' in con:
+            data = con.get('list')
+            for i in data:
+                print(i)
+                # nickname = i['accountName']  # 昵称
+                # comment = i['commentInfo']  # 评价内容
+                # operTime = i['operTime']  # 评价时间
+                # phone = i['phone']  # 手机型号
+                # rating = i['rating']  # 评分
 
-    params = {
-        'method': 'internal.user.commenList3',
-        'serviceType': '20',
-        'reqPageNum': page,
-        'maxResults': '25',
-        'appid': 'C100148961',
-        'version': '10.0.0',
-        'zone': '',
-        'locale': 'zh',
-    }
+                sql = 'insert into database_comments_huawei(nickname, comment, operTime, phone, rating, appname) values(%s,%s,%s,%s,%s,%s);'
 
-    # 请求的链接 ，添加参数和请求头
-    #  使用的 requests 库的 get 方法
-    response = requests.get('https://web-drcn.hispace.dbankcloud.cn/uowap/index', params=params, headers=headers)
-    import json
+                # msgid = pymysql.converters.escape_string(str(i.get('commentId')))
+                nickname1 = pymysql.converters.escape_string(str(i.get('accountName')))
+                # print(nickname1)
+                comment1 = pymysql.converters.escape_string(str(i.get('commentInfo')))
+                # print(comment1)
+                operTime1 = pymysql.converters.escape_string(str(i.get('operTime')))
+                phone1 = pymysql.converters.escape_string(str(i.get('phone')))
+                rating1 = pymysql.converters.escape_string(str(i.get('rating')))
+                appname1 = pymysql.converters.escape_string(str(v))
+                # data = ['msgid','nickname', 'comment', 'operTime', 'phone', 'rating'] 
 
-    # 将传递的数据转换为 json 文件，可以提取具体的评论内容
-    con = json.loads(response.text)
-    print(con)
+                huaweidata = [nickname1, comment1, operTime1, phone1, rating1,appname1]
+                print(huaweidata)
+                cursor.execute(sql,huaweidata)     # 插入数据
+                # db.commit() # 提交请求
 
-    # 提取存储评论内容的列表
-    if 'list' in con:
-        data = con.get('list')
-
-        for i in data:
-            print(i)
-            nickname = i['accountName']  # 昵称
-            comment = i['commentInfo']  # 评价内容
-            operTime = i['operTime']  # 评价时间
-            phone = i['phone']  # 手机型号
-            rating = i['rating']  # 评分
-
-            sql = 'insert into database_huaweicomments(nickname, comment, operTime, phone, rating) values(%s,%s,%s,%s,%s);'
-
-            # msgid = pymysql.converters.escape_string(str(i.get('commentId')))
-            nickname1 = pymysql.converters.escape_string(str(i.get('accountName')))
-            comment1 = pymysql.converters.escape_string(str(i.get('commentInfo')))
-            operTime1 = pymysql.converters.escape_string(str(i.get('operTime')))
-            phone1 = pymysql.converters.escape_string(str(i.get('phone')))
-            rating1 = pymysql.converters.escape_string(str(i.get('rating')))
-
-            # data = ['msgid','nickname', 'comment', 'operTime', 'phone', 'rating'] 
-
-            huaweidata = [nickname1, comment1, operTime1, phone1, rating1]
-            cursor.execute(sql,huaweidata)     # 插入数据
-            db.commit() # 提交请求
-
-            data_all.append(huaweidata)
+                data_all.append(huaweidata)
 cursor.close() 
 db.close()  #关闭数据库连接
-df = pd.DataFrame(data_all, columns=['nickname', 'comment', 'operTime', 'phone', 'rating'])
+# df = pd.DataFrame(data_all, columns=['nickname', 'comment', 'operTime', 'phone', 'rating'])
 
 # df.to_csv('./edge.csv', encoding="utf_8")
  
