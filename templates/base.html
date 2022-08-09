@@ -1,0 +1,173 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>microsoft-engage|{% block title %}{% endblock %} </title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <div class="container top">
+        <div class="row">
+            <div class="col-md-6">
+                <a>
+                    <img class="img-responsive" src="{% static 'img/logo.jpg' %}">
+                </a>
+            </div>
+            <div class="col-md-3 hidden-xs">
+                <a class="phone ant">
+                    <span class="glyphicon glyphicon-phone"></span>电话：暂时没有&nbsp; &nbsp;
+                </a>
+            </div>
+            <div class="col-md-3 hidden-xs">
+                <a class="mail ant">
+                    <span class="glyphicon glyphicon-envelope"></span>邮箱：microsoft-engage@126.com
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- 导航条 -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example"
+                    aria-expanded="false">
+                    <span>导航栏</span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example">
+                <ul class="nav navbar-nav" style="width:100%;">
+                    <li class="nav-top">
+                        <a href="{% url 'home' %}">首页</a>
+                    </li>
+                    <li class="dropdown nav-top" id='about'>
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            小组简介</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'aboutApp:survey' %}">小组概况</a></li>
+                            <li><a href="{% url 'aboutApp:honor' %}">所获荣誉</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown nav-top" id='news'>
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            项目动态</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'newsApp:news' 'company' %}">项目要闻</a></li>
+                            <li><a href="{% url 'newsApp:news' 'industry' %}">预研结果</a></li>
+                            <li><a href="{% url 'newsApp:news' 'notice' %}">通知公告</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown nav-top" id='products'>
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            应用市场</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'productsApp:products' 'robot' %}">
+                                    360应用</a></li>
+                            <li><a href="{% url 'productsApp:products' 'monitor' %}">
+                                    华为应用市场</a></li>
+                            <li><a href="{% url 'productsApp:products' 'face' %}">
+                                    其他应用市场</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown nav-top">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            服务支持</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'serviceApp:download' %}">
+                                    资料下载</a></li>
+                            <li><a href="{% url 'serviceApp:platform' %}">
+                                    Git-hub仓库</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-top" id='science'>
+                        <a href="{% url 'scienceApp:science' %}">爱好者基地</a>
+                    </li>
+                    <li class="dropdown nav-top" id='employ'>
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            爱好者招募</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'contactApp:contact' %}">欢迎咨询</a></li>
+                            <li><a href="{% url 'contactApp:recruit' %}">加入我们</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- 分割线 -->
+    <div class="line"></div>
+    {% block content %}
+    {% endblock %}
+    <!-- 页脚 -->
+    <div class="container web-footer">
+        <!-- 站点地图 -->
+        <div class="row" id="map-footer">
+            <div class="col-md-2">
+                <dl>
+                    <dt>公司简介</dt>
+                    <dd><a href="{% url 'aboutApp:survey' %}">小组概况</a></dd>
+                    <dd><a href="{% url 'aboutApp:honor' %}">所获荣誉</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>应用市场</dt>
+                    <dd><a href="{% url 'productsApp:products' 'robot' %}">360应用市场</a></dd>
+                    <dd><a href="{% url 'productsApp:products' 'monitor' %}">华为应用市场</a></dd>
+                    <dd><a href="{% url 'productsApp:products' 'face' %}">其他应用市场</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>服务支持</dt>
+                    <dd><a href="{% url 'serviceApp:download' %}">资料下载</a></dd>
+                    <dd><a href="{% url 'serviceApp:platform' %}">GitHub仓库</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt>爱好者招募</dt>
+                    <dd><a href="{% url 'contactApp:contact' %}">欢迎咨询</a></dd>
+                    <dd><a href="{% url 'contactApp:recruit' %}">加入我们</a></dd>
+                </dl>
+            </div>
+            <div class="col-md-4" id="wx">
+                <p>扫描二维码，关注我们</p>
+                <img class="qrimg" src="{% static 'img/qr.png' %}" alt="wx">
+                <p>客服热线：<b style="font-size:20px">暂时没有</b></p>
+            </div>
+        </div>
+        <!-- 版权 -->
+        <div class="row" id="patent-footer">
+            <p> © 2022 microsoft-engage项目 版权所有 | 苏ICP备19006378号 </p>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $(".dropdown").mouseover(function () {
+                $(this).addClass("open");
+            });
+            $(".dropdown").mouseleave(function () {
+                $(this).removeClass("open");
+            });
+        });
+    </script>
+    <script type="text/JavaScript">
+        $('#{{active_menu}}').addClass("active");
+    </script>
+    <script type="text/JavaScript">
+        $('#{{sub_menu}}').addClass("active");
+     </script>
+</body>
+
+</html>
