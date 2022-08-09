@@ -29,10 +29,12 @@ data_all = []
 # edge C100148961 
 # office C10888510
 # outlook C100502955
+# teams C100427405
 appdict={
     'C100148961':'edge',
     'C10888510':'office',
     'C100502955':'outlook',
+    'C100427405':'teams'
 }
 
 # 连接数据库
