@@ -3,22 +3,32 @@ from typing_extensions import Self
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-
+import pymysql
 
 driver = webdriver.Chrome()
 driver.get("https://app.diandian.com/app/6njqcmu6xj0rip4/android-review?market=3&summer=")
 
+# 连接数据库
+db = pymysql.connect(
+
+host="127.0.0.1", 
+port=3306,
+user='root',    #在这里输入用户名
+password='root',     #在这里输入密码
+database='comments',
+charset='utf8mb4'
+)
+cursor = db.cursor() #创建游标对象
 
 def scrapy_table(flag):
     global driver
-    # if flag == 0: 
-    #     driver = webdriver.Chrome()
-    #     driver.get("https://app.diandian.com/app/6njqcmu6xj0rip4/android-review?market=3&summer=")
 
-    if flag == 1:
+    # 点击下一页
+    if flag != 0:
         next_button = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > div > div > button.btn-next")
         next_button.click()
 
+    # 开始爬表格数据
     table=driver.find_element(By.CSS_SELECTOR,'#commentContent > div.loading-wrap > div > div > div > table')#定位网页表格位置
     #获取表格包含的行，并将行数赋值
     table_rows=table.find_elements(By.CSS_SELECTOR,'#commentContent > div.loading-wrap > div > div > div > table > tbody > tr')# table包含行数的集合，包含标题
@@ -26,51 +36,55 @@ def scrapy_table(flag):
 
     vrows=len(table_rows)#将总行数赋给变量
     print('vrows',vrows)
-    #table_cols=table_rows[0].find_elements_by_tag_name('th')# tabler的总列数
-    #遍历每行第2列（by_tag_name('td')[1]）的值，也可以获取其他列只需要将[1]更改为需要获取的列即可。
+
     for table_num in range(1, vrows):
 
         time.sleep(2)
         try:
             content = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child("+str(table_num)+") > td:nth-child(2) > div > div > div.dd-word-wrap > div > p > span").text
-            print('content:',content)                               #commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child(8) > td:nth-child(2) > div > div > div.dd-word-wrap > div > p > span
+            print('content:',content)                             
         except:
-            continue                                                        #commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child(6) > td:nth-child(2) > div > div > div.dd-word-wrap > div > p > span
-        driver.implicitly_wait(6)
+            continue  
+                                                            
         time.sleep(2)
         score = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child("+str(table_num)+") > td:nth-child(1) > div.dd-table-cell > div > div").get_attribute("aria-valuenow")
         print('score:',score)                            
 
-        driver.implicitly_wait(10)
         time.sleep(2)
         date = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child("+str(table_num)+") > td:nth-child(3) > div > div").text
         print('date:',date)
 
         try:
-            version = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child("+str(table_num)+") > td:nth-child(2) > div > div > div.comment-info.dd-flex.dd-flex-warp > span:nth-child(6)")
-            print('version:',version.text)
+            version = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child("+str(table_num)+") > td:nth-child(2) > div > div > div.comment-info.dd-flex.dd-flex-warp > span:nth-child(6)").text
+            print('version:',version)
         except:
-            print("version: not found version！")
+            version = " "
+            print("not found version!")
+
+        time.sleep(2)
+        try:
+            user = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > table > tbody > tr:nth-child("+str(table_num)+") > td:nth-child(2) > div > div > div.comment-info.dd-flex.dd-flex-warp > div > a").text
+            print('user:',user)
+        except:
+            user = "anoy"
+            print("not found user!")
+        
+        time.sleep(2)
+        name = driver.find_element(by=By.CSS_SELECTOR, value=" #appinfo-content > div.container > div:nth-child(2) > div.content-side > div.container-head > div.dd-flex-1.dd-flex.dd-flex-column.dd-flex-space.dd-overflow-hidden > div.logo-wrap > div.max-width-80 > div.app-name > h1").text
+        print('name:',name)
+
+        data = [date,user,content,score,version,name]
+        print(data)
+        sql = 'insert into database_comments_xiaomi(date,user,content,score,version,name) values(%s,%s,%s,%s,%s,%s);'
+        cursor.execute(sql,data)     # 插入数据
+        db.commit()
 
 
+# 爬前10页
 for i in range(10):
-    if i == 0:
-        flag = 0
-    else: 
-        flag = 1
-    scrapy_table(flag)
-# https://app.diandian.com/app/6njqcmu6xj0rip4/android-review?market=3&summer=
+    scrapy_table(i)
 
-
-
-
-time.sleep(2)
-# next_button = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > div > div > button.btn-next")
-# next_button.click()
-
-# search_box = driver.find_element(by=By.NAME, value="q")
-# value = search_box.get_attribute("value")
-# assert value == "Selenium"
-
-# driver.quit()
+cursor.close() 
+db.close()  #关闭数据库连接
+driver.quit() # 退出浏览器
 

@@ -34,7 +34,13 @@ appdict={
     'C100148961':'edge',
     'C10888510':'office',
     'C100502955':'outlook',
-    'C100427405':'teams'
+    'C100427405':'teams',
+    'C100170015':'onedrive',
+    'C10586094':'Word',
+    'C10586102':'Excel',
+    'C10586107':'PowerPoint',
+    'C103244819':'OneNote',
+    'C100488045':'Microsoft Launcher',
 }
 
 # 连接数据库
@@ -50,15 +56,6 @@ charset='utf8mb4'
 
 cursor = db.cursor() #创建游标对象
 
-
-# mysql_setting = {
-#         'host': '127.0.0.1',  # 数据库地址，本机 ip 地址 127.0.0.1
-#         'port': 3306,  # 端口
-#         'user': 'root',  # 数据库用户名
-#         'passwd': 'root',  # 数据库密码
-#         'db':'comments',
-#         # 'charset': 'utf8'
-# }
 for k,v in appdict.items():
     for page in range(1, 10):
         params = {
@@ -105,25 +102,9 @@ for k,v in appdict.items():
                 huaweidata = [nickname1, comment1, operTime1, phone1, rating1,appname1]
                 print(huaweidata)
                 cursor.execute(sql,huaweidata)     # 插入数据
-                # db.commit() # 提交请求
+                db.commit() # 提交请求
 
                 data_all.append(huaweidata)
 cursor.close() 
 db.close()  #关闭数据库连接
-# df = pd.DataFrame(data_all, columns=['nickname', 'comment', 'operTime', 'phone', 'rating'])
 
-# df.to_csv('./edge.csv', encoding="utf_8")
- 
-# 表名
-# 如果不存在表，则自动创建
-# table_name = 'database_huaweicomments'
-# path = './edge.csv'
-# comments_data = pd.read_csv(path,encoding='utf-8')
-# comments_data.columns = ['msgid','nickname', 'comment', 'operTime', 'phone', 'rating']
-# print(comments_data.head)
-
-# engine = create_engine("mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}".format(**mysql_setting), max_overflow=5)
-# comments_data.to_sql(table_name,engine,index=true,if_exists='replace',)
-# print('导入成功...')
-
-# print(comments_data.head(5))

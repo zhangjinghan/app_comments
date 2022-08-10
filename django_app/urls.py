@@ -22,5 +22,6 @@ from . import views
 urlpatterns = [
      path('360/',  views.get_360),
      path('huawei/',  views.get_huawei),
+     path('xiaomi/',  views.get_xiaomi),
      path('admin/', admin.site.urls),
 ]

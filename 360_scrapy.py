@@ -14,9 +14,15 @@ headers = {
 }
 
 appname = {
-    'outlook':'Outlook+Android_com.microsoft.office.outlook',
-    'office':'Office+Mobile+for+Office+365+Android_com.microsoft.office.officehub',
-    'edge':'微软浏览器+Android_com.microsoft.emmx'
+    'Outlook':'Outlook+Android_com.microsoft.office.outlook',
+    'Office':'Office+Mobile+for+Office+365+Android_com.microsoft.office.officehub',
+    'Edge':'微软浏览器+Android_com.microsoft.emmx',
+    'Onedrive':'SkyDrive+Android_com.microsoft.skydrive',
+    'Word':'微软Word预览版+Android_com.microsoft.office.word',
+    'Excel':'微软Excel预览版+Android_com.microsoft.office.excel',
+    'OneNote':'OneNote移动版android',
+    'Bing':'必应搜索+Android_com.microsoft.bing',
+    'Microsoft Launcher':'Arrow+Launcher+Android_com.microsoft.launcher',
 }
 
 # 定时模块
@@ -51,6 +57,7 @@ def sample_job_every_600s():
             Comments = []
 
             for item in json_str:
+                # 判断是否在数据库已存在此条数据
                 querysql = "select msgid from database_comments_360 where msgid="+pymysql.converters.escape_string(str(item.get('msgid')))
                 if(cursor.execute(querysql)==0):
                 # print(querysql)
@@ -66,7 +73,7 @@ def sample_job_every_600s():
                     score = pymysql.converters.escape_string(str(item.get('score')))
                     version = pymysql.converters.escape_string(str(item.get('version_name')))
                     msgid = pymysql.converters.escape_string(str(item.get('msgid')))
-                    name = 'outlook'
+                    name = pymysql.converters.escape_string(str(k))
 
                     data = [date,user,content,score,version,name,msgid]
                     # cursor.executemany(sql, data)
