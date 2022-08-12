@@ -23,5 +23,8 @@ urlpatterns = [
      path('360/',  views.get_360),
      path('huawei/',  views.get_huawei),
      path('xiaomi/',  views.get_xiaomi),
+     path('vivo/',  views.get_vivo),
+     path('oppo/',  views.get_oppo),
+     path('yingyongbao/',  views.get_yingyongybao),
      path('admin/', admin.site.urls),
 ]

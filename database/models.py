@@ -26,3 +26,27 @@ class Comments_xiaomi(models.Model): # 类名代表数据库表名
     score = models.CharField(max_length=255,default="0")
     version = models.CharField(max_length=255,default=" ")
     name = models.CharField(max_length=255,default=" ")  # app名字
+
+class Comments_vivo(models.Model): # 类名代表数据库表名
+    date = models.CharField(max_length=255,default="000000") 
+    user = models.CharField(max_length=255,default="anoy")
+    content = models.CharField(max_length=255,default="nan")
+    score = models.CharField(max_length=255,default="0")
+    version = models.CharField(max_length=255,default=" ")
+    name = models.CharField(max_length=255,default=" ")  # app名字
+
+class Comments_oppo(models.Model): # 类名代表数据库表名
+    date = models.CharField(max_length=255,default="000000") 
+    user = models.CharField(max_length=255,default="anoy")
+    content = models.CharField(max_length=255,default="nan")
+    score = models.CharField(max_length=255,default="0")
+    version = models.CharField(max_length=255,default=" ")
+    name = models.CharField(max_length=255,default=" ")  # app名字
+
+class Comments_yingyongbao(models.Model): # 类名代表数据库表名
+    date = models.CharField(max_length=255,default="000000") 
+    user = models.CharField(max_length=255,default="anoy")
+    content = models.CharField(max_length=255,default="nan")
+    score = models.CharField(max_length=255,default="0")
+    version = models.CharField(max_length=255,default=" ")
+    name = models.CharField(max_length=255,default=" ")  # app名字
