@@ -7,8 +7,8 @@ import pymysql
 driver = webdriver.Chrome()
 
 urls={
-    'Outlook':'q4k1cpukpxjfwng',
     'Office':'74xqcpu8807tlnz',
+    'Outlook':'q4k1cpukpxjfwng',
     'Edge':'6njqcmu6xj0rip4',
     'Onedrive':'vw4q5czu7k6c74p',
     'Word':'340xckuv6mri14d',
@@ -38,18 +38,21 @@ def scrapy_table(page):
 
     # 点击下一页
     if page != 0:
-        next_button = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > div > div > button.btn-next")
-        disable = next_button.get_attribute("disabled")
-        print(disable)
-        print(type(disable))
-        if(disable!='true'):
-            next_button.click()
-            print("next page")
-        else: 
-            print("没有点击下一页")
+        #try处理部分应用只有一页评论，没有nextbutton按钮
+        try:
+            next_button = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > div > div > button.btn-next")
+            disable = next_button.get_attribute("disabled")
+            print(disable)
+            print(type(disable))
+            if(disable!='true'):
+                next_button.click()
+                print("next page")
+            else: 
+                print("没有点击下一页")
+                return 3
+                # exit()
+        except:
             return 3
-            exit()
-            
     # 开始爬表格数据
     table=driver.find_element(By.CSS_SELECTOR,'#commentContent > div.loading-wrap > div > div > div > table')#定位网页表格位置
     #获取表格包含的行，并将行数赋值
