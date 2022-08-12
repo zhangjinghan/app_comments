@@ -3,10 +3,23 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 import pymysql
+from selenium.webdriver.chrome.options import Options
 
 def myscrapy(urls,market,appname):
+    
+    ####################################
+    # Linux版本需要加入option字段
+    ch_options = webdriver.ChromeOptions()
+    #为Chrome配置无头模式
+    ch_options.add_argument("--headless")  
+    ch_options.add_argument('--no-sandbox')
+    ch_options.add_argument('--disable-gpu')
+    ch_options.add_argument('--disable-dev-shm-usage')
+    # 在启动浏览器时加入配置
+    driver = webdriver.Chrome(options=ch_options)
+    #####################################
 
-    driver = webdriver.Chrome()
+    # driver = webdriver.Chrome()
 
     # 连接数据库
     db = pymysql.connect(

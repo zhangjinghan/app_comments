@@ -8,6 +8,7 @@
 ### `all.py`：oppo，vivo，xiaomi，应用宝的点点数据爬虫
 
 ---
+
 ### `django_app` ： django框架
 ### `database` ：django的app，用于数据库操作
 ## 前端
@@ -15,7 +16,9 @@
 
 
 ---
-### `main`分支在Windows下运行，若是Linux服务器，爬虫时需要在webdriver加入option字段
+
+### `main` 分支在Windows下运行，若是Linux服务器，爬虫时需要在webdriver加入以下option字段。（可查看`centos7.9` 分支）
+
 ```python
 from selenium.webdriver.chrome.options import Options
 
@@ -28,6 +31,8 @@ ch_options.add_argument('--disable-dev-shm-usage')
 # 在启动浏览器时加入配置
 driver = webdriver.Chrome(options=ch_options)
 ```
+### `centos7.9`分支在centos7.9系统下运行
 
 ---
+
 ### `requirements`：环境运行需要的库
