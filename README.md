@@ -15,7 +15,7 @@
 
 
 ---
-### `main`分支在Windows下运行，若是Linux服务器，爬虫时需要在webdriver加入option字段
+### `main`分支在Windows下运行，若是Linux服务器，爬虫时需要在webdriver加入option字段（查看`centos7.9`分支）
 ```python
 from selenium.webdriver.chrome.options import Options
 
