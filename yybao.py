@@ -32,16 +32,31 @@ charset='utf8mb4'
 )
 cursor = db.cursor() #创建游标对象
 
-def scrapy_table(flag):
+# 删除表中数据
+sql='truncate table database_comments_yybao;'
+cursor.execute(sql)   
+db.commit()
+
+def scrapy_table(page):
     global driver
 
-    # 点击下一页
-    if flag != 0:
+# 点击下一页
+    if page != 0:
+        #try处理部分应用只有一页评论，没有nextbutton按钮
         try:
             next_button = driver.find_element(by=By.CSS_SELECTOR, value="#commentContent > div.loading-wrap > div > div > div > div > div > button.btn-next")
-            next_button.click()
+            disable = next_button.get_attribute("disabled")
+            print(disable)
+            print(type(disable))
+            # 如果下一页可用
+            if(disable!='true'):
+                next_button.click()
+                print("next page")
+            else: 
+                print("没有点击下一页")
+                return 3
         except:
-            exit()
+            return 3
 
     # 开始爬表格数据
     table=driver.find_element(By.CSS_SELECTOR,'#commentContent > div.loading-wrap > div > div > div > table')#定位网页表格位置
@@ -98,7 +113,9 @@ for k,v in urls.items():
     driver.get("https://app.diandian.com/app/"+str(v)+"/android-review?market=7&summer=")
     # 爬前10页
     for i in range(10):
-        scrapy_table(i)
+        end = scrapy_table(i)
+        if end == 3:
+            break
 
 cursor.close() 
 db.close()  #关闭数据库连接

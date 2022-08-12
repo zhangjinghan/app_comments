@@ -44,13 +44,13 @@ def scrapy_table(page):
             disable = next_button.get_attribute("disabled")
             print(disable)
             print(type(disable))
+            # 如果下一页可用
             if(disable!='true'):
                 next_button.click()
                 print("next page")
             else: 
                 print("没有点击下一页")
                 return 3
-                # exit()
         except:
             return 3
     # 开始爬表格数据
