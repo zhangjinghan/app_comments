@@ -19,6 +19,7 @@ from django.urls import path
 from django.conf.urls import url
 from . import views
 
+
 urlpatterns = [
      path('360/',  views.get_360),
      path('huawei/',  views.get_huawei),
