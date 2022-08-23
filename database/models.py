@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here. 
-class CommentsList(models.Model): # 类名代表数据库表名
+class Comments_360(models.Model): # 类名代表数据库表名
     date = models.CharField(max_length=255,default="000000") 
     user = models.CharField(max_length=255,default="anoy")
     content = models.CharField(max_length=255,default="nan")
@@ -10,7 +10,7 @@ class CommentsList(models.Model): # 类名代表数据库表名
     name = models.CharField(max_length=255,default="outlook")  # app名字
     msgid = models.CharField(max_length=255,default="nan")  
 
-class huaweiComments(models.Model): # 类名代表数据库表名
+class Comments_huawei(models.Model): # 类名代表数据库表名
     nickname = models.CharField(max_length=255,default="anoy") 
     comment = models.CharField(max_length=255,default=" ")
     operTime = models.CharField(max_length=255,default="000000")
